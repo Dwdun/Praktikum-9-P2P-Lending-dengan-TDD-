@@ -4,14 +4,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import com.p2p.domain.Borrower;
 import com.p2p.domain.Loan;
 import com.p2p.service.LoanService;
 
 public class LoanServiceTest {
+    private static final Logger logger = LogManager.getLogger(LoanServiceTest.class);
+
     @Test
     void shouldRejectLoanWhenBorrowerNotVerified() {
-        System.out.println("[INFO] Tes Skenario Borrower meminjam tapi tidak terverifikasi");;
+        logger.info("[TC-01] Tes Skenario Borrower meminjam tapi tidak terverifikasi");;
         // =====================================================
         // SCENARIO:
         // Borrower tidak terverifikasi (KYC = false)
@@ -24,15 +29,15 @@ public class LoanServiceTest {
         // =========================
         // Borrower belum lolos proses KYC
         Borrower borrower = new Borrower(false, 700);
-        System.out.println("[INFO] Inisial State:");
-        System.out.println("[INFO] Borrower verified = false , credit score = 700");
+        logger.info("Inisial State:");
+        logger.info("Borrower verified = false , credit score = 700");
 
         // Service untuk pengajuan loan
         LoanService loanService = new LoanService();
 
         // Jumlah pinjaman valid
         BigDecimal amount = BigDecimal.valueOf(1000);
-        System.out.println("[INFO] Biaya yang akan dipinjam = 1000");
+        logger.info("Biaya yang akan dipinjam = 1000");
 
         // =========================
         // Act (Action)
@@ -46,12 +51,12 @@ public class LoanServiceTest {
         // Assert (Expected Result)
         // =========================
         assertEquals("Borrower not verified", exception.getMessage());
-        System.out.println("[ERROR] Exception berhasil ditangkap, Test [PASS]");
+        logger.error("Exception berhasil ditangkap, Test [PASS]");
     }
 
     @Test
     void shouldRejectLoanWhenAmountIsZeroOrNegative(){
-        System.out.println("[INFO] Tes Skenario Borrower terverifikasi tapi pinjaman tidak valid jumlahnya (kurang dari sama dengan nol)");;
+        logger.info("[TC-02] Tes Skenario Borrower terverifikasi tapi pinjaman tidak valid jumlahnya (kurang dari sama dengan nol)");;
         // =====================================================
         // SCENARIO:
         // Borrower terverifikasi (KYC = true)
@@ -64,17 +69,17 @@ public class LoanServiceTest {
         // =========================
         //Borrower sudah terverifikasi
         Borrower borrower = new Borrower(true, 700);
-        System.out.println("[INFO] Inisial State:");
-        System.out.println("[INFO] Borrower verified = true , credit score = 700");
+        logger.info("Inisial State:");
+        logger.info("Borrower verified = true , credit score = 700");
 
         //service pengajuan Loan
         LoanService loanService = new LoanService();
 
         //jumlah pinjaman tidak valid (<= 0)
         BigDecimal amountZero = BigDecimal.valueOf(0);
-        System.out.println("[INFO] Biaya yang akan dipinjam = 0");
+        logger.info("Biaya yang akan dipinjam = 0");
         BigDecimal amountNegative = BigDecimal.valueOf(-67);
-        System.out.println("[INFO] Biaya yang akan dipinjam = -67");
+        logger.info("Biaya yang akan dipinjam = -67");
 
         // =========================
         // Act (Action)
@@ -91,15 +96,15 @@ public class LoanServiceTest {
         // Assert (Expected Result)
         // =========================
         assertEquals("Amount is Too Low", exceptionzero.getMessage());
-        System.out.println("[ERROR] Exception Amount 0 berhasil ditangkap, Test [PASS]");
+        logger.error("Exception Amount 0 berhasil ditangkap, Test [PASS]");
         assertEquals("Amount is Too Low", exceptionnegative.getMessage());
-        System.out.println("[ERROR] Exception Amount 0 berhasil ditangkap, Test [PASS]");
+        logger.error("Exception Amount -67 berhasil ditangkap, Test [PASS]");
     }
 
 
     @Test
     void shouldApproveLoanWhenCreditScoreHigh(){
-        System.out.println("[INFO] Tes Skenario Borrower terverifikasi, amount valid dan credit score tinggi");;
+        logger.info("[TC-03] Tes Skenario Borrower terverifikasi, amount valid dan credit score tinggi");;
         // =====================================================
         // SCENARIO:
         // Borrower terverifikasi (KYC = true)
@@ -112,15 +117,15 @@ public class LoanServiceTest {
         // =========================
         // Borrower sudah terverifikasi
         Borrower borrower = new Borrower(true, 1000);
-        System.out.println("[INFO] Inisial State:");
-        System.out.println("[INFO] Borrower verified = true , credit score = 1000");
+        logger.info("Inisial State:");
+        logger.info("Borrower verified = true , credit score = 1000");
 
         //service pengajuan Loan
         LoanService loanService = new LoanService();
 
         //jumlah pinjaman valid
         BigDecimal amount = BigDecimal.valueOf(800);
-        System.out.println("[INFO] Biaya yang akan dipinjam = 800");
+        logger.info("Biaya yang akan dipinjam = 800");
 
         // =========================
         // Act (Action)
@@ -132,12 +137,12 @@ public class LoanServiceTest {
         // Assert (Expected Result)
         // =========================
         assertEquals(Loan.Status.APPROVED, loan.getStatus());
-        System.out.println("[INFO] Loan status APPROVED, Test [PASS]");
+        logger.info("Loan status APPROVED, Test [PASS]");
     }
 
     @Test
     void shouldRejectLoanWhenCreditScoreLow(){
-        System.out.println("[INFO] Tes Skenario Borrower terverifikasi, amount valid tapi credit score rendah");;
+       logger.info("[TC-04] Tes Skenario Borrower terverifikasi, amount valid tapi credit score rendah");;
         // =====================================================
         // SCENARIO:
         // Borrower terverifikasi (KYC = true)
@@ -150,15 +155,15 @@ public class LoanServiceTest {
         // =========================
         // Borrower sudah terverifikasi
         Borrower borrower = new Borrower(true, 300);
-        System.out.println("[INFO] Inisial State:");
-        System.out.println("[INFO] Borrower verified = true , credit score = 300");
+        logger.info("Inisial State:");
+        logger.info("Borrower verified = true , credit score = 300");
 
         //service pengajuan Loan
         LoanService loanService = new LoanService();
 
         //jumlah pinjaman valid
         BigDecimal amount = BigDecimal.valueOf(800);
-        System.out.println("[INFO] Biaya yang akan dipinjam = 800");
+        logger.info("Biaya yang akan dipinjam = 800");
 
         // =========================
         // Act (Action)
@@ -170,6 +175,6 @@ public class LoanServiceTest {
         // Assert (Expected Result)
         // =========================
         assertEquals(Loan.Status.REJECTED, loan.getStatus());
-        System.out.println("[INFO] Loan status REJECTED, Test [PASS]");
+        logger.info("Loan status REJECTED, Test [PASS]");
     }
 }
